@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Daily Horoscope</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0d0d2b;color:#e8d5b7;font-family:'Lato',sans-serif;min-height:100vh;padding:20px}
+  h1{font-family:'Cinzel',serif;text-align:center;font-size:clamp(1.6rem,5vw,2.8rem);color:#f5c842;letter-spacing:2px;margin-bottom:6px}
+  #date{text-align:center;color:#a89ec9;font-size:.95rem;margin-bottom:30px;letter-spacing:1px}
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;max-width:900px;margin:0 auto}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:22px 12px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 0 18px rgba(245,200,66,.35);background:rgba(245,200,66,.08)}
+  .card .emoji{font-size:2rem;display:block;margin-bottom:8px}
+  .card .sign{font-family:'Cinzel',serif;font-size:.9rem;color:#f5c842;letter-spacing:1px}
+  .card .dates{font-size:.72rem;color:#8880a8;margin-top:4px}
+  #detail{display:none;max-width:680px;margin:0 auto;animation:fadeIn .4s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  #detail-sign{font-family:'Cinzel',serif;font-size:clamp(1.4rem,4vw,2rem);color:#f5c842;text-align:center;margin-bottom:6px}
+  #detail-dates{text-align:center;color:#8880a8;font-size:.85rem;margin-bottom:24px}
+  #detail-emoji{font-size:3rem;display:block;text-align:center;margin-bottom:16px}
+  #detail-text{background:rgba(255,255,255,.05);border:1px solid rgba(245,200,66,.15);border-radius:16px;padding:28px;line-height:1.85;font-size:1.05rem;color:#e8d5b7}
+  #back{display:block;margin:24px auto 0;background:transparent;border:1px solid rgba(245,200,66,.5);color:#f5c842;font-family:'Cinzel',serif;font-size:.9rem;padding:10px 28px;border-radius:30px;cursor:pointer;letter-spacing:1px;transition:background .2s,box-shadow .2s}
+  #back:hover{background:rgba(245,200,66,.12);box-shadow:0 0 14px rgba(245,200,66,.3)}
+  footer{text-align:center;color:#3d3860;font-size:.78rem;margin-top:40px}
+</style>
+</head>
+<body>
+
+<h1>✨ Daily Horoscope 🌙</h1>
+<p id="date"></p>
+
+<div id="grid"></div>
+
+<div id="detail">
+  <span id="detail-emoji"></span>
+  <div id="detail-sign"></div>
+  <div id="detail-dates"></div>
+  <p id="detail-text"></p>
+  <button id="back">⬅ Back to the Stars</button>
+</div>
+
+<footer>⭐ Written in the stars, just for you ⭐</footer>
+
+<script>
+const signs = [
+  {name:"Aries",emoji:"♈",dates:"Mar 21 – Apr 19",horoscope:"The cosmos are lighting a bonfire beneath your feet, dear Aries. Today, your boldness is a superpower — stride into that conversation you've been avoiding, because the universe has already RSVP'd yes on your behalf. A flash of inspiration around midday could spark something you'll still be talking about in six months. Trust the fire in your chest; it knows the way. 🔥"},
+  {name:"Taurus",emoji:"♉",dates:"Apr 20 – May 20",horoscope:"Slow and luscious, like honey dripping from a golden spoon — that's the energy you're swimming in today, sweet Taurus. The stars are urging you to savour rather than rush. A small, quiet pleasure — a perfect cup of tea, sunlight through a window — holds a secret message if you pause long enough to receive it. Your patience today is a kind of magic. 🌿"},
+  {name:"Gemini",emoji:"♊",dates:"May 21 – Jun 20",horoscope:"Your mind is a disco ball today, Gemini, scattering brilliant light in every direction. Two ideas that seemed completely unrelated are about to collide and become something magnificent. Say yes to the unexpected invitation. The conversation you stumble into by accident will be the one you remember. Both of your inner selves are finally agreeing — don't waste this rare alliance. 💫"},
+  {name:"Cancer",emoji:"♋",dates:"Jun 21 – Jul 22",horoscope:"The moon is cradling you today like the most beloved secret it's ever kept, dear Cancer. Your intuition is running on rocket fuel — if something feels off, it is; if something feels right, lean all the way in. A memory surfaces not to haunt you but to show you how far you've traveled. Share a little softness with someone who looks like they need it; you have plenty to spare. 🌊"},
+  {name:"Leo",emoji:"♌",dates:"Jul 23 – Aug 22",horoscope:"The spotlight didn't find you today, Leo — you *are* the spotlight. Every room you walk into rearranges itself around your gravity, and people can't quite explain why they feel warmer in your presence. A creative project is begging you to be a little more audacious than feels comfortable. Comfortable is for naps. The stars say: make it bigger, make it bolder, make it *you*. 👑"},
+  {name:"Virgo",emoji:"♍",dates:"Aug 23 – Sep 22",horoscope:"You've noticed something no one else has, Virgo — you always do. Today that sharp, luminous attention of yours is your greatest gift to the world. A system, plan, or relationship that's been slightly crooked is finally ready to be gently straightened. Don't apologise for caring about the details; the details are where the poetry lives. And yes, you can afford to rest this evening. The list will still be there. 📋"},
+  {name:"Libra",emoji:"♎",dates:"Sep 23 – Oct 22",horoscope:"Beauty is your native language today, Libra, and the universe is handing you a particularly eloquent paragraph. An aesthetic choice — in your home, your outfit, your words — lands with unexpected power. The balance you've been carefully tending tips in your favour, almost effortlessly. Lean into partnership; two perspectives today are genuinely better than one. Say the gracious thing. You'll mean every word. ⚖️"},
+  {name:"Scorpio",emoji:"♏",dates:"Oct 23 – Nov 21",horoscope:"You've been sitting with a truth that most people would flinch away from, Scorpio, and today the universe commends your courage. Something hidden is about to surface — not to undo you, but to set you free. Your intensity is not too much; it is precisely enough for what today requires. A connection deepens past small talk into the kind of honesty that changes people. You are the transformation. 🦋"},
+  {name:"Sagittarius",emoji:"♐",dates:"Nov 22 – Dec 21",horoscope:"Your inner compass is pointing somewhere wild and wonderful today, Sagittarius, and the only wrong answer is to ignore it. An idea arrives from a completely unexpected direction — a stranger's offhand remark, a page you randomly open. Philosophy and adventure are merging; let them. Someone needs to hear the unconventional wisdom rattling around in your head. Say it out loud. The arrow always flies truest when you trust the aim. 🏹"},
+  {name:"Capricorn",emoji:"♑",dates:"Dec 22 – Jan 19",horoscope:"The mountain you've been climbing has a better view than you expected, Capricorn. Today you catch a glimpse of the summit, and it looks remarkably like something you once scribbled in a notebook and thought too ambitious. Keep going. A small but meaningful recognition comes your way — accept it without deflecting. You've earned it. Tonight, let yourself be proud, just quietly, in the way only you know how. 🏔️"},
+  {name:"Aquarius",emoji:"♒",dates:"Jan 20 – Feb 18",horoscope:"The future is leaning down and whispering in your ear today, Aquarius, and only you can hear it. An idea that seems eccentric now will be obvious to everyone else in about three years — start anyway. Your community needs your particular shade of strange, so stop dimming it out of politeness. An unexpected ally appears, someone who gets it without needing a diagram. The revolution, as always, begins in your imagination. ⚡"},
+  {name:"Pisces",emoji:"♓",dates:"Feb 19 – Mar 20",horoscope:"You are swimming in the in-between today, Pisces — that luminous space where dreams and waking life blur at the edges. Pay attention to what arrives there; it carries messages your logical mind would edit out. Your empathy is oceanic right now, so choose wisely who you offer it to, and leave a little for yourself. A creative act, however small, becomes a kind of prayer today. The universe is listening with both ears. 🐟"}
+];
+
+const grid = document.getElementById('grid');
+const detail = document.getElementById('detail');
+
+document.getElementById('date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+signs.forEach((s,i)=>{
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<span class="emoji">${s.emoji}</span><div class="sign">${s.name}</div><div class="dates">${s.dates}</div>`;
+  card.addEventListener('click',()=>{
+    grid.style.display = 'none';
+    detail.style.display = 'block';
+    document.getElementById('detail-emoji').textContent = s.emoji;
+    document.getElementById('detail-sign').textContent = s.name;
+    document.getElementById('detail-dates').textContent = s.dates;
+    document.getElementById('detail-text').textContent = s.horoscope;
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  grid.appendChild(card);
+});
+
+document.getElementById('back').addEventListener('click',()=>{
+  detail.style.display = 'none';
+  grid.style.display = 'grid';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
